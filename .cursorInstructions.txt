@@ -1,0 +1,63 @@
+Custom n8n Node Requirements Document - SanctifAI
+Project Overview
+	•	Node Name: SanctifAI (n8n-nodes-sanctifai)
+	•	Description: This node sends a message and a workflow ID to a hardcoded endpoint. It also retrieves a list of available workflows from a specified endpoint.
+	•	Version: 1.0.0
+Dependencies
+	•	Base Template: n8n Nodes Starter (https://github.com/n8n-io/n8n-nodes-starter)
+	•	Node.js Version: >=14
+Functional Requirements
+1. Core Functionality
+	•	The node will send HTTP POST requests to the hardcoded endpoint:
+
+
+
+	•	The payload must include:
+	•	Message: A JSON string containing the message to be sent.
+	•	Workflow ID: A string representing the ID of the related workflow.
+2. Data Retrieval
+	•	The node will fetch available workflows from the endpoint:
+
+
+
+	•	The response will include a collection of workflows containing:
+	•	Key: The unique ID of the workflow.
+	•	Name: The human-readable name of the workflow.
+3. Authentication
+	•	The node will not include authentication, as the endpoints are publicly accessible.
+4. Operations
+	•	POST Operation:
+	•	Input Parameters:
+	▪	Message (required, type: string)
+	▪	Workflow ID (required, type: string)
+	•	Output Structure:
+	▪	Confirmation of successful post with response data from the endpoint, structured as:
+{
+    "success": true,
+    "message": "Request submitted",
+    "requestId": "d51bdd40-6064-4eee-99c5-882d5dddcaad"
+}
+
+	•	Error Handling: None specified at this stage.
+5. Configuration Options
+	•	Node Properties:
+	•	Message: (string, required) Text to be sent to the endpoint.
+	•	Workflow ID: (string, required) The ID of the workflow.
+	•	Workflows List: (read-only) Dropdown populated with workflow names fetched from the second endpoint.
+User Interface
+	•	Design Preferences: Standard design will be used for the user interface with appropriate labels for inputs and tooltips where necessary.
+Testing
+	•	Concerns: No specific edge cases or scenarios to focus on during testing.
+Documentation
+	•	Format/Structure: Standard documentation format will be used, possibly including examples as needed.
+Deployment
+	•	Build Process: Utilize npm scripts for building and packaging the node.
+	•	Publishing: Follow n8n's guidelines for publishing community nodes.
+Timeline
+	•	Milestones:
+	•	Initial Implementation: [Specify Date]
+	•	Testing Period: [Specify Date]
+	•	Documentation Completion: [Specify Date]
+	•	Final Review and Publishing: [Specify Date]
+Contributors
+	•	Team Members: [Your Name] - Developer
