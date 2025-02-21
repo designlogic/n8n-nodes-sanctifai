@@ -39,6 +39,26 @@ export class SanctifAI implements INodeType {
 				default: '',
 				description: 'Content to process with SanctifAI',
 			},
+			{
+				displayName: 'Override Callback URL',
+				name: 'overrideCallbackUrl',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to override the default callback URL',
+			},
+			{
+				displayName: 'Callback URL',
+				name: 'callbackUrl',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						overrideCallbackUrl: [true],
+					},
+				},
+				default: 'https://workflow.sanctifai.com/webhook-waiting/',
+				description: 'URL to receive the task result',
+			},
 		],
 	};
 
@@ -73,18 +93,22 @@ export class SanctifAI implements INodeType {
 			try {
 				const content = this.getNodeParameter('content', i) as string;
 				const taskTypeId = this.getNodeParameter('taskTypeId', i) as string;
+				const overrideCallbackUrl = this.getNodeParameter('overrideCallbackUrl', i) as boolean;
+				const callbackUrl = overrideCallbackUrl 
+					? this.getNodeParameter('callbackUrl', i) as string
+					: 'https://workflow.sanctifai.com/webhook-waiting/';
 
 				// Make POST request to create task
 				const response = await this.helpers.request({
 					method: 'POST',
-					url: 'https://workflow.sanctifai.com/webhook/hgi',
+					url: 'https://workflow.sanctifai.com/webhook/hgi/auto-fixing-haat',
 					headers: {
 						'Authorization': `Bearer ${credentials.bearerToken}`,
 					},
 					body: {
 						content,
 						taskTypeId,
-						callbackUrl: 'https://workflow.sanctifai.com/webhook-waiting/',
+						callbackUrl,
 					},
 					json: true,
 				});
