@@ -66,7 +66,7 @@ export class SanctifAI implements INodeType {
 		loadOptions: {
 			async getTaskTypes(this: ILoadOptionsFunctions) {
 				const credentials = await this.getCredentials('sanctifAIApi');
-				
+
 				const response = await this.helpers.request({
 					method: 'GET',
 					url: 'https://workflow.sanctifai.com/webhook/hgi/get-task-types',
@@ -76,8 +76,8 @@ export class SanctifAI implements INodeType {
 					json: true,
 				});
 
-				return response.map((task: { id: string; name: string }) => ({
-					name: task.name,
+				return response.map((task: { id: string; name: string; description: string; api: string }) => ({
+					name: `${task.name} - ${task.description}`,
 					value: task.id,
 				}));
 			},
@@ -94,7 +94,7 @@ export class SanctifAI implements INodeType {
 				const content = this.getNodeParameter('content', i) as string;
 				const taskTypeId = this.getNodeParameter('taskTypeId', i) as string;
 				const overrideCallbackUrl = this.getNodeParameter('overrideCallbackUrl', i) as boolean;
-				const callbackUrl = overrideCallbackUrl 
+				const callbackUrl = overrideCallbackUrl
 					? this.getNodeParameter('callbackUrl', i) as string
 					: 'https://workflow.sanctifai.com/webhook-waiting/';
 
@@ -125,4 +125,4 @@ export class SanctifAI implements INodeType {
 
 		return [this.helpers.returnJsonArray(returnData)];
 	}
-} 
+}
