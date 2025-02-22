@@ -1,4 +1,4 @@
-import { INodeType, INodeTypeDescription, IExecuteFunctions, IDataObject, ILoadOptionsFunctions } from 'n8n-workflow';
+import { INodeType, INodeTypeDescription, IExecuteFunctions, IDataObject, ILoadOptionsFunctions, NodeOperationError } from 'n8n-workflow';
 
 export class SanctifAI implements INodeType {
 	description: INodeTypeDescription = {
@@ -65,21 +65,33 @@ export class SanctifAI implements INodeType {
 	methods = {
 		loadOptions: {
 			async getTaskTemplates(this: ILoadOptionsFunctions) {
-				const credentials = await this.getCredentials('sanctifAIApi');
+				try {
+					const credentials = await this.getCredentials('sanctifAIApi');
 
-				const response = await this.helpers.request({
-					method: 'GET',
-					url: 'https://workflow.sanctifai.com/webhook/hgi/get-task-templates',
-					headers: {
-						'Authorization': `Bearer ${credentials.bearerToken}`,
-					},
-					json: true,
-				});
+					if (!credentials?.bearerToken) {
+						throw new NodeOperationError(this.getNode(), 'No bearer token provided in credentials');
+					}
 
-				return response.map((task: { id: string; name: string; description: string; api: string }) => ({
-					name: `${task.name} - ${task.description}`,
-					value: task.id,
-				}));
+					const response = await this.helpers.request({
+						method: 'GET',
+						url: 'https://workflow.sanctifai.com/webhook/hgi/get-task-templates',
+						headers: {
+							'Authorization': `Bearer ${credentials.bearerToken}`,
+						},
+						json: true,
+					});
+
+					if (!Array.isArray(response)) {
+						throw new NodeOperationError(this.getNode(), 'Invalid response format. Expected an array of task templates.');
+					}
+
+					return response.map((task: { id: string; name: string; description: string; api: string }) => ({
+						name: `${task.name} - ${task.description}`,
+						value: task.id,
+					}));
+				} catch (error) {
+					throw new NodeOperationError(this.getNode(), `Failed to load task templates: ${error.message}`);
+				}
 			},
 		},
 	};
