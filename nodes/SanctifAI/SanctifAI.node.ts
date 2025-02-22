@@ -21,15 +21,15 @@ export class SanctifAI implements INodeType {
 		],
 		properties: [
 			{
-				displayName: 'Task Type',
+				displayName: 'Task Template Name or ID',
 				name: 'taskTypeId',
 				type: 'options',
 				typeOptions: {
-					loadOptionsMethod: 'getTaskTypes',
+					loadOptionsMethod: 'getTaskTemplates',
 				},
 				required: true,
 				default: '',
-				description: 'Type of task to execute',
+				description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
 			},
 			{
 				displayName: 'Message Content',
@@ -64,12 +64,12 @@ export class SanctifAI implements INodeType {
 
 	methods = {
 		loadOptions: {
-			async getTaskTypes(this: ILoadOptionsFunctions) {
+			async getTaskTemplates(this: ILoadOptionsFunctions) {
 				const credentials = await this.getCredentials('sanctifAIApi');
 
 				const response = await this.helpers.request({
 					method: 'GET',
-					url: 'https://workflow.sanctifai.com/webhook/hgi/get-task-types',
+					url: 'https://workflow.sanctifai.com/webhook/hgi/get-task-templates',
 					headers: {
 						'Authorization': `Bearer ${credentials.bearerToken}`,
 					},
