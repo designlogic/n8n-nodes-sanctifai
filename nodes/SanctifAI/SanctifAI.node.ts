@@ -81,11 +81,11 @@ export class SanctifAI implements INodeType {
 						json: true,
 					});
 
-					if (!Array.isArray(response)) {
-						throw new NodeOperationError(this.getNode(), 'Invalid response format. Expected an array of task templates.');
+					if (!response?.taskTemplates || !Array.isArray(response.taskTemplates)) {
+						throw new NodeOperationError(this.getNode(), 'Invalid response format. Expected an object with taskTemplates array.');
 					}
 
-					return response.map((task: { id: string; name: string; description: string; api: string }) => ({
+					return response.taskTemplates.map((task: { id: string; name: string; description: string; api: string }) => ({
 						name: `${task.name} - ${task.description}`,
 						value: task.id,
 					}));
