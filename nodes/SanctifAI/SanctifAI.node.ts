@@ -74,7 +74,7 @@ export class SanctifAI implements INodeType {
 
 					const response = await this.helpers.request({
 						method: 'GET',
-						url: '@https://workflow.sanctifai.com/webhook/hgi/get-task-templates',
+						url: 'https://workflow.sanctifai.com/webhook/hgi/get-task-templates',
 						headers: {
 							'Authorization': `Bearer ${credentials.bearerToken}`,
 						},
@@ -113,7 +113,7 @@ export class SanctifAI implements INodeType {
 				// Make POST request to create task
 				const response = await this.helpers.request({
 					method: 'POST',
-					url: '@https://workflow.sanctifai.com/webhook/hgi/auto-fixing-haat',
+					url: 'https://workflow.sanctifai.com/webhook/hgi/auto-fixing-haat',
 					headers: {
 						'Authorization': `Bearer ${credentials.bearerToken}`,
 					},
